@@ -15,7 +15,7 @@
     >
       <img class="w-8/12" src="~/assets/arabiameet-logo.png" alt="" />
     </div>
-    <div class="bg-white w-full md:w-1/2">
+    <div class="bg-white w-full md:w-1/2 p-10">
       <slot />
     </div>
   </div>
