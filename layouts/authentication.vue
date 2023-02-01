@@ -5,16 +5,17 @@
         w-1/2
         bg-cover
         bg-no-repeat
-        flex
         justify-center
         items-center
         background-image
+        hidden
         bg-left
+        md:flex
       "
     >
       <img class="w-8/12" src="~/assets/arabiameet-logo.png" alt="" />
     </div>
-    <div class="bg-white w-1/2">
+    <div class="bg-white w-full md:w-1/2">
       <slot />
     </div>
   </div>
