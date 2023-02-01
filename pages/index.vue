@@ -73,7 +73,7 @@ definePageMeta({
       </form>
       <div class="flex justify-center mt-5">
         <p class="text-gray-500">Don't have an account?</p>
-        <p class="text-cyan-700 font-bold ml-2 cursor-pointer">Sign up</p>
+       <NuxtLink v-slot="{navigate}" to="/register"> <p @click="navigate" class="text-cyan-700 font-bold ml-2 cursor-pointer">Sign up</p></NuxtLink>
       </div>
   </div>
   </div>
