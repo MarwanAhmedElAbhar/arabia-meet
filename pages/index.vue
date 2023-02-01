@@ -5,7 +5,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="h-full">
+  <div>
     <div class="flex flex-col justify-center items-center mt-9">
       <img class="md:hidden mb-5 w-[120px]" src="~/assets/arabiameet-logo.png" alt="" />
       <p class="text-2xl font-semibold">Sign in</p>
