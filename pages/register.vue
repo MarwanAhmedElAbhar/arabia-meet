@@ -1,7 +1,40 @@
 <script setup>
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { ref } from "vue";
+
 definePageMeta({
   layout: "authentication",
 });
+
+const firstName = ref("");
+const lastName = ref("");
+const email = ref("");
+const password = ref("");
+
+const displayName = computed(() => {
+  return `${firstName.value} ${lastName.value}`;
+});
+
+const { $auth } = useNuxtApp();
+const { $db } = useNuxtApp();
+
+const registerUser = async () => {
+  try {
+    const { user } = await createUserWithEmailAndPassword(
+      $auth,
+      email.value,
+      password.value
+    );
+    await setDoc(doc($db, "users", user.uid), {
+      name: displayName.value,
+      email: user.email,
+      uid: user.uid,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
 
 <template>
@@ -16,48 +49,19 @@ definePageMeta({
       <p class="text-2xl font-semibold">Sign up</p>
       <div class="mt-[50px]">
         <div
-          class="
-            flex
-            items-center
-            px-5
-            py-2
-            bg-gray-100
-            cursor-pointer
-            shadow-md
-            rounded-[8px]
-          "
+          class="flex items-center px-5 py-2 bg-gray-100 cursor-pointer shadow-md rounded-[8px]"
         >
           <img src="~/assets/google.svg" alt="" />
           <p class="text-black capitalize ml-3">continue with google</p>
         </div>
         <div
-          class="
-            flex
-            items-center
-            px-5
-            py-2
-            bg-blue-950
-            cursor-pointer
-            mt-2
-            shadow-md
-            rounded-[8px]
-          "
+          class="flex items-center px-5 py-2 bg-blue-950 cursor-pointer mt-2 shadow-md rounded-[8px]"
         >
           <img src="~/assets/facebook.svg" alt="" />
           <p class="text-white capitalize ml-3">continue with facebook</p>
         </div>
         <div
-          class="
-            flex
-            items-center
-            px-5
-            py-2
-            cursor-pointer
-            bg-black
-            mt-2
-            shadow-md
-            rounded-[8px]
-          "
+          class="flex items-center px-5 py-2 cursor-pointer bg-black mt-2 shadow-md rounded-[8px]"
         >
           <img src="~/assets/apple.svg" alt="" />
           <p class="text-white capitalize ml-3">continue with apple</p>
@@ -68,9 +72,41 @@ definePageMeta({
       <div class="h-px bg-gray-400 w-full"></div>
       <p class="absolute px-3 left-[47%] -top-3 bg-white text-gray-400">or</p>
     </div>
-    <div class="px-4 py-5 sm:p-6 mt-8 text-center">
+    <div class="px-4 py-5 sm:p-7 mt-8 text-center">
       <form action="">
-        <div class="">
+        <div class="flex justify-center gap-10">
+          <div>
+            <label
+              for="firstName"
+              class="block text-sm font-medium text-gray-700"
+              >First Name</label
+            >
+            <input
+              type="text"
+              name="firstName"
+              id="firstName"
+              v-model="firstName"
+              autocomplete="firstName"
+              class="mt-2 shadow-sm rounded border-gray-500 border border-solid focus:border-cyan-200 sm:text-sm p-2"
+            />
+          </div>
+          <div>
+            <label
+              for="lastName"
+              class="block text-sm font-medium text-gray-700"
+              >Last Name</label
+            >
+            <input
+              type="text"
+              name="lastName"
+              id="lastName"
+              v-model="lastName"
+              autocomplete="lastName"
+              class="mt-2 shadow-sm rounded border-gray-500 border border-solid focus:border-cyan-200 sm:text-sm p-2"
+            />
+          </div>
+        </div>
+        <div class="mt-5">
           <label for="email" class="block text-sm font-medium text-gray-700"
             >Email Address</label
           >
@@ -78,17 +114,9 @@ definePageMeta({
             type="text"
             name="email"
             id="email"
+            v-model="email"
             autocomplete="email"
-            class="
-              mt-2
-              shadow-sm
-              w-1/2
-              rounded
-              border-gray-500 border border-solid
-              focus:border-cyan-200
-              sm:text-sm
-              p-2
-            "
+            class="mt-2 shadow-sm rounded w-2/3 border-gray-500 border border-solid focus:border-cyan-200 sm:text-sm p-2"
           />
         </div>
 
@@ -100,29 +128,13 @@ definePageMeta({
             type="password"
             name="password"
             id="password"
-            class="
-              mt-2
-              shadow-sm
-              w-1/2
-              rounded
-              border-gray-500 border border-solid
-              focus:border-cyan-700
-              sm:text-sm
-              p-2
-            "
+            v-model="password"
+            class="mt-2 shadow-sm w-2/3 rounded border-gray-500 border border-solid focus:border-cyan-700 sm:text-sm p-2"
           />
         </div>
-        <div class="flex justify-center mt-6">
+        <div @click="registerUser" class="flex justify-center mt-6">
           <p
-            class="
-              bg-cyan-700
-              px-6
-              py-2
-              cursor-pointer
-              font-bold
-              text-white
-              rounded-full
-            "
+            class="bg-cyan-700 px-6 py-2 cursor-pointer font-bold text-white rounded-full"
           >
             Register
           </p>
