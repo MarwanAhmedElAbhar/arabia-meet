@@ -1,21 +1,11 @@
 <template>
-  <div class="flex min-h-screen">
+  <div class="grid md:grid-cols-2 grid-cols-1 h-screen">
     <div
-      class="
-        w-1/2
-        bg-cover
-        bg-no-repeat
-        justify-center
-        items-center
-        background-image
-        hidden
-        bg-left
-        md:flex
-      "
+      class="hidden md:flex bg-cover bg-no-repeat justify-center items-center background-image bg-left"
     >
       <img class="w-8/12" src="~/assets/arabiameet-logo.png" alt="" />
     </div>
-    <div class="bg-white w-full md:w-1/2 p-10">
+    <div class="bg-white h-full overflow-auto p-10">
       <slot />
     </div>
   </div>
@@ -32,8 +22,6 @@
   bottom: 0;
   right: 0;
   position: absolute;
-  z-index: -1;  
-
-
+  z-index: -1;
 }
 </style>
