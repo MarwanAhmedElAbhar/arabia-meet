@@ -1,14 +1,17 @@
 <script setup>
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { ref } from "vue";
+
 definePageMeta({
   layout: "authentication",
 });
 
 const email = ref("");
 const password = ref("");
-
 
 const { $auth } = useNuxtApp();
 const { $db } = useNuxtApp();
@@ -20,9 +23,25 @@ const login = async () => {
       email.value,
       password.value
     );
-console.log(user)
+    console.log(user);
   } catch (error) {
     console.log(error);
+  }
+};
+
+const provider = new GoogleAuthProvider()
+
+const signInWithGoogle = async () => {
+  try {
+    const result  = await signInWithPopup($auth, provider);
+    console.log(result)
+    const { accessToken } = GoogleAuthProvider.credentialFromResult(result);
+    const user = result.user;
+    console.log(user)
+  } catch (error) {
+    console.log(error)
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log(credential)
   }
 };
 </script>
@@ -38,6 +57,7 @@ console.log(user)
       <p class="text-2xl font-semibold">Sign in</p>
       <div class="mt-[50px]">
         <div
+          @click="signInWithGoogle"
           class="flex items-center px-5 py-2 bg-gray-100 cursor-pointer shadow-md rounded-[8px]"
         >
           <img src="~/assets/google.svg" alt="" />
@@ -68,7 +88,7 @@ console.log(user)
             >Email Address</label
           >
           <input
-          v-model="email"
+            v-model="email"
             type="text"
             name="email"
             id="email"
@@ -82,7 +102,7 @@ console.log(user)
             >Password</label
           >
           <input
-          v-model="password"
+            v-model="password"
             type="password"
             name="password"
             id="password"

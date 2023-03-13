@@ -1,5 +1,9 @@
 <script setup>
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ref } from "vue";
 
@@ -35,6 +39,27 @@ const registerUser = async () => {
     console.log(error);
   }
 };
+
+const provider = new GoogleAuthProvider();
+
+const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup($auth, provider);
+    console.log(result);
+    const { accessToken } = GoogleAuthProvider.credentialFromResult(result);
+    const user = result.user;
+    await setDoc(doc($db, "users", user.uid), {
+      name: user.displayName,
+      email: user.email,
+      uid: user.uid,
+    });
+    console.log(user);
+  } catch (error) {
+    console.log(error);
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log(credential);
+  }
+};
 </script>
 
 <template>
@@ -49,6 +74,7 @@ const registerUser = async () => {
       <p class="text-2xl font-semibold">Sign up</p>
       <div class="mt-[50px]">
         <div
+          @click="signInWithGoogle"
           class="flex items-center px-5 py-2 bg-gray-100 cursor-pointer shadow-md rounded-[8px]"
         >
           <img src="~/assets/google.svg" alt="" />
