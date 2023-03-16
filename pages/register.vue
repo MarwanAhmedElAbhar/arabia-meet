@@ -16,6 +16,8 @@ const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
 const password = ref("");
+const message = ref("");
+
 
 const { $auth } = useNuxtApp();
 const { $db } = useNuxtApp();
@@ -26,6 +28,10 @@ const facebookProvider = new FacebookAuthProvider();
 const displayName = computed(() => {
   return `${firstName.value} ${lastName.value}`;
 });
+
+const clearError = () => {
+  message.value = ''
+}
 
 const registerUser = async () => {
   try {
@@ -122,6 +128,7 @@ const signInWithFacebook = async () => {
               type="text"
               name="firstName"
               id="firstName"
+              @keyup="clearError"
               v-model="firstName"
               autocomplete="firstName"
               class="mt-2 shadow-sm rounded border-gray-500 border border-solid focus:border-cyan-200 sm:text-sm p-2"
@@ -137,6 +144,7 @@ const signInWithFacebook = async () => {
               type="text"
               name="lastName"
               id="lastName"
+              @keyup="clearError"
               v-model="lastName"
               autocomplete="lastName"
               class="mt-2 shadow-sm rounded border-gray-500 border border-solid focus:border-cyan-200 sm:text-sm p-2"
@@ -152,6 +160,7 @@ const signInWithFacebook = async () => {
             name="email"
             id="email"
             v-model="email"
+            @keyup="clearError"
             autocomplete="email"
             class="mt-2 shadow-sm rounded w-2/3 border-gray-500 border border-solid focus:border-cyan-200 sm:text-sm p-2"
           />
@@ -165,10 +174,12 @@ const signInWithFacebook = async () => {
             type="password"
             name="password"
             id="password"
+            @keyup="clearError"
             v-model="password"
             class="mt-2 shadow-sm w-2/3 rounded border-gray-500 border border-solid focus:border-cyan-700 sm:text-sm p-2"
           />
         </div>
+        <ErrorBlock v-if="message" class="mt-6" :message="message" />
         <div @click="registerUser" class="flex justify-center mt-6">
           <p
             class="bg-cyan-700 px-6 py-2 cursor-pointer font-bold text-white rounded-full"
