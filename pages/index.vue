@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
 } from "firebase/auth";
 import { ref } from "vue";
 
@@ -15,6 +16,9 @@ const password = ref("");
 
 const { $auth } = useNuxtApp();
 const { $db } = useNuxtApp();
+
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 const login = async () => {
   try {
@@ -29,19 +33,31 @@ const login = async () => {
   }
 };
 
-const provider = new GoogleAuthProvider()
-
 const signInWithGoogle = async () => {
   try {
-    const result  = await signInWithPopup($auth, provider);
-    console.log(result)
+    const result = await signInWithPopup($auth, googleProvider);
+    console.log(result);
     const { accessToken } = GoogleAuthProvider.credentialFromResult(result);
     const user = result.user;
-    console.log(user)
+    console.log(user);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     const credential = GoogleAuthProvider.credentialFromError(error);
-    console.log(credential)
+    console.log(credential);
+  }
+};
+
+const signInWithFacebook = async () => {
+  try {
+    const result = await signInWithPopup($auth, facebookProvider);
+    console.log(result);
+    const { accessToken } = FacebookAuthProvider.credentialFromResult(result);
+    const user = result.user;
+    console.log(user);
+  } catch (error) {
+    console.log(error);
+    const credential = FacebookAuthProvider.credentialFromError(error);
+    console.log(credential);
   }
 };
 </script>
@@ -64,16 +80,11 @@ const signInWithGoogle = async () => {
           <p class="text-black capitalize ml-3">continue with google</p>
         </div>
         <div
+          @click="signInWithFacebook"
           class="flex items-center px-5 py-2 bg-blue-950 cursor-pointer mt-2 shadow-md rounded-[8px]"
         >
           <img src="~/assets/facebook.svg" alt="" />
           <p class="text-white capitalize ml-3">continue with facebook</p>
-        </div>
-        <div
-          class="flex items-center px-5 py-2 cursor-pointer bg-black mt-2 shadow-md rounded-[8px]"
-        >
-          <img src="~/assets/apple.svg" alt="" />
-          <p class="text-white capitalize ml-3">continue with apple</p>
         </div>
       </div>
     </div>
