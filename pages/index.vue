@@ -6,6 +6,7 @@ import {
   FacebookAuthProvider,
 } from "firebase/auth";
 import { ref } from "vue";
+import errors from "../constants/errors"
 
 definePageMeta({
   layout: "authentication",
@@ -42,7 +43,9 @@ const login = async () => {
     );
     console.log(user);
   } catch (error) {
-    console.log(error);
+        console.log(error.code);
+
+    message.value = errors[error.code]
   }
 };
 

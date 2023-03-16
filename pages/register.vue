@@ -7,6 +7,8 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ref } from "vue";
+import errors from "../constants/errors"
+
 
 definePageMeta({
   layout: "authentication",
@@ -33,6 +35,14 @@ const clearError = () => {
   message.value = ''
 }
 
+const validateForm = () => {
+  if (!email.value || !password.value || !firstName.value || !lastName.value) {
+    message.value = "Please fill the missing fields";
+    return;
+  }
+  registerUser();
+};
+
 const registerUser = async () => {
   try {
     const { user } = await createUserWithEmailAndPassword(
@@ -46,7 +56,8 @@ const registerUser = async () => {
       uid: user.uid,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.code);
+    message.value = errors[error.code]
   }
 };
 
@@ -180,7 +191,7 @@ const signInWithFacebook = async () => {
           />
         </div>
         <ErrorBlock v-if="message" class="mt-6" :message="message" />
-        <div @click="registerUser" class="flex justify-center mt-6">
+        <div @click="validateForm" class="flex justify-center mt-6">
           <p
             class="bg-cyan-700 px-6 py-2 cursor-pointer font-bold text-white rounded-full"
           >
