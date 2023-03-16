@@ -14,7 +14,7 @@ definePageMeta({
 
 const email = ref("");
 const password = ref("");
-const message = ref("");
+const errorMessage = ref("");
 
 const { $auth } = useNuxtApp();
 const { $db } = useNuxtApp();
@@ -23,12 +23,12 @@ const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
 const clearError = () => {
-  message.value = ''
+  errorMessage.value = ''
 }
 
 const validateForm = () => {
   if (!email.value || !password.value) {
-    message.value = "Please fill the missing fields";
+    errorMessage.value = "Please fill the missing fields";
     return;
   }
   login();
@@ -45,7 +45,7 @@ const login = async () => {
   } catch (error) {
         console.log(error.code);
 
-    message.value = errors[error.code]
+    errorMessage.value = errors[error.code]
   }
 };
 
@@ -138,7 +138,7 @@ const signInWithFacebook = async () => {
             class="mt-2 shadow-sm w-1/2 rounded border-gray-500 border border-solid focus:border-cyan-700 sm:text-sm p-2"
           />
         </div>
-        <ErrorBlock v-if="message" class="mt-6" :message="message" />
+        <ErrorBlock v-if="errorMessage" class="mt-6" :message="errorMessage" />
 
         <div @click="validateForm" class="flex justify-center mt-6">
           <p
